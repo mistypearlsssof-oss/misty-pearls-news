@@ -278,6 +278,13 @@ def publish_article(url):
 def main():
     articles = get_articles()
 
+    if os.getenv("TEST_MODE") == "true":
+        print("Mode test activé.")
+        if not articles:
+            raise RuntimeError("Aucun article trouvé.")
+        publish_article(articles[0])
+        return
+
     first_run = not STATE_FILE.exists()
 
     if first_run:
