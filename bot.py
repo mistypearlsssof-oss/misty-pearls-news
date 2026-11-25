@@ -156,19 +156,31 @@ def get_article(url):
     content = (
         soup.find("article")
         or soup.find("main")
+        or soup.body
     )
 
     details = []
 
     if content:
-        for element in content.find_all(["p", "li"]):
+        for element in content.find_all(
+            ["h2", "h3", "h4", "p", "li"]
+        ):
+            if element.find_parent(["nav", "footer", "header", "aside"]):
+                continue
+
             text = element.get_text(" ", strip=True)
 
-            if len(text) < 35:
+            if len(text) < 5:
                 continue
 
-            if text == description:
+            if text == description or text == title:
                 continue
+
+            if element.name in ["h2", "h3", "h4"]:
+                text = f"**{text}**"
+
+            elif element.name == "li":
+                text = f"• {text}"
 
             if text not in details:
                 details.append(text)
