@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 from pathlib import Path
 
-TOKEN = os.environ["DISCORD_TOKEN"]
-CHANNEL_ID = os.environ["DISCORD_CHANNEL_ID"]
+TOKEN = os.environ["DISCORD_TOKEN"].strip()
+CHANNEL_ID = os.environ["DISCORD_CHANNEL_ID"].strip()
 
 NEWS_URL = "https://www.starstable.com/fr/news"
 STATE_FILE = Path("published.json")
