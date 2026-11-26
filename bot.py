@@ -176,7 +176,13 @@ def get_article(url):
 
             if len(text) < 5:
                 continue
-
+                
+            if any(phrase in text.casefold() for phrase in [
+                "for known issues",
+                "pour les problèmes connus"
+            ]):
+                
+                continue
             if text == description or text == title:
                 continue
 
@@ -211,7 +217,7 @@ def get_article(url):
     description = translate(description)
 
     if summary:
-        summary = "\n".join(
+        summary = "\n\n".join(
             translate(paragraph.strip())
             for paragraph in summary.split("\n\n")
             if paragraph.strip()
@@ -252,9 +258,9 @@ def publish_article(url):
         for index, chunk in enumerate(chunks):
             fields.append({
                 "name": (
-                    "✧ Les nouveautés en détail"
-                    if index == 0
-                    else "✧ Suite"
+                    f"✧ Les nouveautés en détail — {index + 1}/{len(chunks)}"
+                    if len(chunks) > 1
+                    else "✧ Les nouveautés en détail"
                 ),
                 "value": chunk
             })
