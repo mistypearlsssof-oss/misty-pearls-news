@@ -160,12 +160,16 @@ def get_article(url):
     )
 
     details = []
+    seen = set()
 
     if content:
         for element in content.find_all(
             ["h2", "h3", "h4", "p", "li"]
         ):
             if element.find_parent(["nav", "footer", "header", "aside"]):
+                continue
+
+            if element.name == "p" and element.find_parent("li"):
                 continue
 
             text = element.get_text(" ", strip=True)
@@ -176,14 +180,20 @@ def get_article(url):
             if text == description or text == title:
                 continue
 
+            key = " ".join(text.casefold().split())
+
+            if key in seen:
+                continue
+
+            seen.add(key)
+
             if element.name in ["h2", "h3", "h4"]:
                 text = f"**{text}**"
 
             elif element.name == "li":
                 text = f"• {text}"
 
-            if text not in details:
-                details.append(text)
+            details.append(text)
 
     summary = ""
 
