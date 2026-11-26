@@ -201,7 +201,11 @@ def get_article(url):
     description = translate(description)
 
     if summary:
-        summary = translate(summary.strip())
+        summary = "\n".join(
+            translate(paragraph.strip())
+            for paragraph in summary.split("\n\n")
+            if paragraph.strip()
+        )
 
     return title, description, image, category, summary
 
